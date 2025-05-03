@@ -92,4 +92,3 @@ class TestPet:
             assert body["photoUrls"] == response_json["photoUrls"], f"Ошибка в значении поля 'photoUrls'"
             assert body["tags"] == response_json["tags"], f"Ошибка в значении поля 'tags'"
             assert body["status"] == response_json["status"], f"Ошибка в значении поля 'status'"
-            print(response_json)
