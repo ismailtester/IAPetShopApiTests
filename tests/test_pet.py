@@ -69,7 +69,7 @@ class TestPet:
 
     @allure.title("Добавление нового питомца c полными данными (POST /pet)")
     def test_add_full_pet(self):
-        with allure.step("Подготовка данных всех полей для создания нового питомца"):
+        with allure.step("Подготовка  данных всех полей для создания нового питомца"):
             body = {
                 "id": 10,
                 "name": "doggie",
