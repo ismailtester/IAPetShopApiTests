@@ -1,5 +1,6 @@
 import allure
 import jsonschema
+import pytest
 import requests
 from .schemas.pet_schema import PET_SCHEMA
 
@@ -149,3 +150,25 @@ class TestPet:
 
         with allure.step("Проверка статус кода ответа на получение информации об удаленном питомце"):
             assert response.status_code == 404, "Код ответа не совпал с ожидаемым"
+
+    @allure.title("Получение списка питомцев по статусу (GET /pet/findByStatus)")
+    @pytest.mark.parametrize(
+        "status, expected_status_code, expected_type",
+        [
+            ("available", 200, list),
+            ("pending", 200, list),
+            ("sold", 200, list),
+            ("dead", 400, dict),
+            ("", 400, dict)
+
+        ]
+    )
+    def test_get_pet_by_status(self, status, expected_status_code, expected_type):
+
+        with allure.step(f"Получение списка питомцев по статусу {status}"):
+            response = requests.get(url=f"{BASE_URL}/pet/findByStatus", params={"status": status})
+
+        with allure.step("Проверка статус кода ответа и формата данных"):
+            assert response.status_code == expected_status_code, "Код ответа не совпал с ожидаемым"
+            print(type(response.json()))
+            assert isinstance(response.json(), expected_type), f"В ответе пришел неверный формат данных" #  isinstance(response.json(), list) Проверяет соответствует ли переменная 1, формату данных
