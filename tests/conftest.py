@@ -15,3 +15,18 @@ def create_pet():
     response_json = response.json()
     assert response.status_code == 200, f"Неверный статус код"
     return response_json
+
+@pytest.fixture(scope="function")
+def create_order():
+    """Фикстура для создания заказа"""
+    body = {
+        "id": 1,
+        "petId": 1,
+        "quantity": 1,
+        "status": "placed",
+        "complete": True
+    }
+    response = requests.post(url=f"{BASE_URL}/store/order", json=body)
+    response_json = response.json()
+    assert response.status_code == 200, f"Неверный статус код"
+    return response_json
