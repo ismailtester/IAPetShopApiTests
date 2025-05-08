@@ -1,5 +1,6 @@
 import allure
 import jsonschema
+import pytest
 import requests
 from .schemas.pet_schema import PET_SCHEMA
 
@@ -149,3 +150,41 @@ class TestPet:
 
         with allure.step("Проверка статус кода ответа на получение информации об удаленном питомце"):
             assert response.status_code == 404, "Код ответа не совпал с ожидаемым"
+
+    @allure.title("Получение списка питомцев по существующим статусам (GET /pet/findByStatus)")
+    @pytest.mark.parametrize(
+        "status, expected_status_code",
+        [
+            ("available", 200),
+            ("pending", 200 ),
+            ("sold", 200)
+
+        ]
+    )
+    def test_get_pet_by_existing_status(self, status, expected_status_code):
+
+        with allure.step(f"Получение списка питомцев по статусу {status}"):
+            response = requests.get(url=f"{BASE_URL}/pet/findByStatus", params={"status": status})
+
+        with allure.step("Проверка статус кода ответа и формата данных"):
+            assert response.status_code == expected_status_code, "Код ответа не совпал с ожидаемым"
+            assert isinstance(response.json(), list), f"В ответе пришел неверный формат данных" #  isinstance(response.json(), list) Проверяет соответствует ли переменная 1, формату данных
+
+    @allure.title("Получение списка питомцев по не существующим статусам (GET /pet/findByStatus)")
+    @pytest.mark.parametrize(
+        "status, expected_status_code",
+        [
+            ("dead", 400),
+            ("", 400)
+
+        ]
+    )
+
+    def test_get_pet_by_nonexisting_status(self, status, expected_status_code):
+
+        with allure.step(f"Получение списка питомцев по статусу {status}"):
+            response = requests.get(url=f"{BASE_URL}/pet/findByStatus", params={"status": status})
+
+        with allure.step("Проверка статус кода ответа и формата данных"):
+            assert response.status_code == expected_status_code, "Код ответа не совпал с ожидаемым"
+            assert isinstance(response.json(), dict), f"В ответе пришел неверный формат данных" #  isinstance(response.json(), list) Проверяет соответствует ли переменная 1, формату данных
