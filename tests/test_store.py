@@ -35,7 +35,7 @@ class TestStore:
             assert body["complete"] == response_json["complete"], f"Ошибка в значении поля 'complete'"
 
     @allure.title("Получение информации о заказе по ID (GET /store/order/{orderId})")
-    def test_order_by_id(self, create_order):
+    def test_get_order_by_id(self, create_order):
         with allure.step("Получение ID созданного заказа"):
             order_id = create_order["id"]
 
